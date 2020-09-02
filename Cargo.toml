@@ -1,5 +1,5 @@
 [package]
-name = "CryptoLearn-Backend"
+name = "cryptography-learning-backend"
 version = "0.1.0"
 authors = ["zickshen <zickshen@tencent.com>"]
 edition = "2018"
