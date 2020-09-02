@@ -19,8 +19,11 @@ impl QueryRoot {
     }
 }
 
-async fn index(schema: web::Data<Schema<QueryRoot, EmptyMutation, EmptySubscription>>, req: GQLRequest) -> GQLResponse {
-  req.into_inner().execute(&schema).await.into()
+async fn index(
+    schema: web::Data<Schema<QueryRoot, EmptyMutation, EmptySubscription>>,
+    req: GQLRequest,
+) -> GQLResponse {
+    req.into_inner().execute(&schema).await.into()
 }
 
 async fn gql_playgound() -> HttpResponse {
