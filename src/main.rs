@@ -10,10 +10,10 @@ use async_graphql_actix_web::{GQLRequest, GQLResponse};
 
 mod model;
 
-use crate::model::{QueryRoot};
+use crate::model::Query;
 
 async fn index(
-    schema: web::Data<Schema<QueryRoot, EmptyMutation, EmptySubscription>>,
+    schema: web::Data<Schema<Query, EmptyMutation, EmptySubscription>>,
     req: GQLRequest,
 ) -> GQLResponse {
     req.into_inner().execute(&schema).await.into()
@@ -31,7 +31,7 @@ async fn main() -> std::io::Result<()> {
 
     HttpServer::new(move || {
         App::new()
-            .data(Schema::new(QueryRoot, EmptyMutation, EmptySubscription))
+            .data(Schema::new(Query, EmptyMutation, EmptySubscription))
             .service(web::resource("/").guard(guard::Post()).to(index))
             .service(web::resource("/").guard(guard::Get()).to(gql_playgound))
     })

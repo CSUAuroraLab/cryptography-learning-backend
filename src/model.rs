@@ -1,7 +1,7 @@
-pub struct QueryRoot;
+pub struct Query;
 
 #[async_graphql::Object]
-impl QueryRoot {
+impl Query {
     async fn hello(&self) -> String {
         "hello world".to_string()
     }
