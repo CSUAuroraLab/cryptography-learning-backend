@@ -10,6 +10,7 @@ impl Query {
     async fn practice(&self) -> Practice {
         Practice {
             lab_categories: LabCategory {
+                name: String::from("test"),
                 labs: vec![Lab {
                     name: String::from("test"),
                     resource: String::from("/test"),
@@ -38,6 +39,7 @@ struct Lab {
 
 #[SimpleObject]
 struct LabCategory {
+    name: String,
     labs: Vec<Lab>,
 }
 
