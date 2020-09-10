@@ -9,7 +9,7 @@ impl Query {
 
     async fn practice(&self) -> Practice {
         Practice {
-            lab_categories: LabCategory {
+            lab_categories: vec![LabCategory {
                 name: String::from("test"),
                 labs: vec![Lab {
                     name: String::from("test"),
@@ -19,7 +19,7 @@ impl Query {
                         port: 114514,
                     }],
                 }],
-            },
+            }],
         }
     }
 }
@@ -45,5 +45,5 @@ struct LabCategory {
 
 #[SimpleObject]
 struct Practice {
-    lab_categories: LabCategory,
+    lab_categories: Vec<LabCategory>,
 }
