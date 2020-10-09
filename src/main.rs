@@ -29,8 +29,16 @@ async fn gql_playgound() -> HttpResponse {
 #[actix_rt::main]
 async fn main() -> std::io::Result<()> {
     dotenv().ok();
-    env_logger::init();
     let opt = opts::Opt::from_args();
+    std::env::set_var("RUST_LOG", "trace");
+    match opt.log_level {
+        0 => std::env::set_var("RUST_LOG", "error"),
+        1 => std::env::set_var("RUST_LOG", "warn"),
+        2 => std::env::set_var("RUST_LOG", "info"),
+        3 => std::env::set_var("RUST_LOG", "debug"),
+        _ => std::env::set_var("RUST_LOG", "trace"),
+    }
+    env_logger::init();
     debug!("{:?}", opt);
 
     print!("Playground: http://localhost:8000/");

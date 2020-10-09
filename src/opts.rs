@@ -4,10 +4,10 @@ use structopt:: StructOpt;
 #[derive(Debug, StructOpt)]
 #[structopt(name = "Cryptography Learning", about = "Using for cryptography learning")]
 pub struct Opt {
-  /// debug level by number of `l', default debug level is error,
+  /// debug level by number of `v', default debug level is error,
   /// 1, 2, 3, 4 correspond to warn, info, debug, trace respectively
-  #[structopt(short, long, parse(from_occurrences))]
-  log_level: u32,
+  #[structopt(short = "v", parse(from_occurrences))]
+  pub log_level: u32,
 
   /// configuration file's, check example for more details
   #[structopt(
@@ -15,5 +15,5 @@ pub struct Opt {
     env = "CONFIG",
     parse(from_os_str))
   ]
-  config: PathBuf,
+  pub config: PathBuf,
 }
