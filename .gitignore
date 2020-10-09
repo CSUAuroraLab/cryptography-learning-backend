@@ -10,3 +10,7 @@
 #Added by cargo
 
 /target
+
+.env
+config.toml
+test/*
