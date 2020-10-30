@@ -1,4 +1,5 @@
 use async_graphql::{Object, SimpleObject};
+use serde::Deserialize;
 pub struct Query;
 
 #[Object]
@@ -24,26 +25,32 @@ impl Query {
     }
 }
 
-#[SimpleObject]
+#[derive(Deserialize, SimpleObject)]
 struct Endpoint {
     host: String,
     port: i32,
 }
 
-#[SimpleObject]
+#[derive(Deserialize, SimpleObject)]
 struct Lab {
     name: String,
     resource: String,
     endpoints: Vec<Endpoint>,
 }
 
-#[SimpleObject]
+#[derive(Deserialize, SimpleObject)]
 struct LabCategory {
     name: String,
     labs: Vec<Lab>,
 }
 
-#[SimpleObject]
+#[derive(Deserialize, SimpleObject)]
 struct Practice {
     lab_categories: Vec<LabCategory>,
+}
+
+#[derive(Deserialize, SimpleObject)]
+struct Translation {
+    lang: String,
+    text: String,
 }

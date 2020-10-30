@@ -3,7 +3,7 @@ extern crate thiserror;
 use actix_web::{guard, web, App, HttpResponse, HttpServer};
 use async_graphql::http::{playground_source, GraphQLPlaygroundConfig};
 use async_graphql::{EmptyMutation, EmptySubscription, Schema};
-use async_graphql_actix_web::{GQLRequest, GQLResponse};
+use async_graphql_actix_web::{Request, Response};
 use log::{info, warn, error, debug};
 use structopt::StructOpt;
 use dotenv::dotenv;
@@ -15,9 +15,10 @@ use crate::model::Query;
 
 async fn index(
     schema: web::Data<Schema<Query, EmptyMutation, EmptySubscription>>,
-    req: GQLRequest,
-) -> GQLResponse {
-    req.into_inner().execute(&schema).await.into()
+    request: Request,
+) -> Response {
+    let request = request.into_inner();
+    schema.execute(request).await.into()
 }
 
 async fn gql_playgound() -> HttpResponse {
