@@ -11,14 +11,16 @@ impl Query {
     async fn practice(&self) -> Practice {
         Practice {
             lab_categories: vec![LabCategory {
-                name: String::from("test"),
+                name: vec![Translation{ 
+                    lang: String::from("en"),
+                    text: String::from("test"),
+                }],
                 labs: vec![Lab {
-                    name: String::from("test"),
-                    resource: String::from("/test"),
-                    endpoints: vec![Endpoint {
-                        host: String::from("http://localhost"),
-                        port: 114514,
+                    name: vec![Translation{ 
+                        lang: String::from("en"),
+                        text: String::from("test"),
                     }],
+                    resource: String::from("/test"),
                 }],
             }],
         }
@@ -33,14 +35,14 @@ struct Endpoint {
 
 #[derive(Deserialize, SimpleObject)]
 struct Lab {
-    name: String,
+    name: Vec<Translation>,
+    #[graphql(skip)]
     resource: String,
-    endpoints: Vec<Endpoint>,
 }
 
 #[derive(Deserialize, SimpleObject)]
 struct LabCategory {
-    name: String,
+    name: Vec<Translation>,
     labs: Vec<Lab>,
 }
 
