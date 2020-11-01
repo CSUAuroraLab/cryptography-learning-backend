@@ -10,8 +10,9 @@ use dotenv::dotenv;
 
 mod model;
 mod opts;
+mod errors;
 
-use crate::model::Query;
+use crate::model::{Query, Configuration};
 
 async fn index(
     schema: web::Data<Schema<Query, EmptyMutation, EmptySubscription>>,
@@ -41,12 +42,18 @@ async fn main() -> std::io::Result<()> {
     }
     env_logger::init();
     debug!("{:?}", opt);
+    let config = Configuration::from_file(opt.config);
+    debug!("{:?}", config);
 
     print!("Playground: http://localhost:8000/");
 
+    let schema = Schema::build(Query, EmptyMutation, EmptySubscription)
+        .data(config.clone())
+        .finish();
+
     HttpServer::new(move || {
         App::new()
-            .data(Schema::new(Query, EmptyMutation, EmptySubscription))
+            .data(schema.clone())
             .service(web::resource("/").guard(guard::Post()).to(index))
             .service(web::resource("/").guard(guard::Get()).to(gql_playgound))
     })
