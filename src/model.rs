@@ -50,6 +50,7 @@ struct Endpoint {
 
 #[derive(Deserialize, Serialize, SimpleObject, Debug, Clone)]
 struct Lab {
+    id: String,
     #[graphql(skip)]
     resource: String,
     name: Vec<Translation>,
@@ -57,7 +58,7 @@ struct Lab {
 
 #[derive(Deserialize, Serialize, SimpleObject, Debug, Clone)]
 struct LabCategory {
-    id: i32,
+    id: String,
     name: Vec<Translation>,
     labs: Vec<Lab>,
 }
