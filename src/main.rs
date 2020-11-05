@@ -44,6 +44,7 @@ async fn main() -> std::io::Result<()> {
     debug!("{:?}", opt);
     let config = Configuration::from_file(opt.config);
     debug!("{:?}", config);
+    let static_file_path = opt.static_file_path;
 
     print!("Playground: http://localhost:8000/");
 
@@ -53,6 +54,7 @@ async fn main() -> std::io::Result<()> {
 
     HttpServer::new(move || {
         App::new()
+            .service(actix_files::Files::new("/static", &static_file_path))
             .data(schema.clone())
             .service(web::resource("/").guard(guard::Post()).to(index))
             .service(web::resource("/").guard(guard::Get()).to(gql_playgound))
