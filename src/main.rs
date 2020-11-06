@@ -4,22 +4,21 @@ use actix_web::{guard, web, App, HttpResponse, HttpServer};
 use async_graphql::http::{playground_source, GraphQLPlaygroundConfig};
 use async_graphql::{EmptyMutation, EmptySubscription, Schema};
 use async_graphql_actix_web::{Request, Response};
-use log::{info, warn, error, debug};
-use structopt::StructOpt;
 use dotenv::dotenv;
+use log::{debug, error, info, warn};
+use structopt::StructOpt;
 
+mod errors;
 mod model;
 mod opts;
-mod errors;
 
-use crate::model::{Query, Configuration};
+use crate::model::{Configuration, Query};
 
 async fn index(
     schema: web::Data<Schema<Query, EmptyMutation, EmptySubscription>>,
     request: Request,
 ) -> Response {
-    let request = request.into_inner();
-    schema.execute(request).await.into()
+    schema.execute(request.into_inner()).await.into()
 }
 
 async fn gql_playgound() -> HttpResponse {
@@ -42,9 +41,10 @@ async fn main() -> std::io::Result<()> {
     }
     env_logger::init();
     debug!("{:?}", opt);
+    let static_file_path = opt.static_file_path;
+
     let config = Configuration::from_file(opt.config);
     debug!("{:?}", config);
-    let static_file_path = opt.static_file_path;
 
     print!("Playground: http://localhost:8000/");
 
