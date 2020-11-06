@@ -1,5 +1,5 @@
-use thiserror::Error;
 use async_graphql::{ErrorExtensions, FieldError};
+use thiserror::Error;
 
 #[derive(Debug, Error)]
 pub enum QueryError {

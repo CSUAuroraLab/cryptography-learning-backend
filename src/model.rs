@@ -1,7 +1,7 @@
-use async_graphql::{Context, Object, SimpleObject, FieldResult, ErrorExtensions};
+use crate::errors::QueryError;
+use async_graphql::{Context, ErrorExtensions, FieldResult, Object, SimpleObject};
 use serde::{Deserialize, Serialize};
 use std::{fs::File, io::Read, path::PathBuf};
-use crate::errors::{QueryError};
 
 pub struct Query;
 
@@ -11,10 +11,7 @@ impl Query {
         "hello world".to_string()
     }
 
-    async fn practice<'ctx>(
-        &self,
-        ctx: &'ctx Context<'_>,
-    ) -> FieldResult<&'ctx Practice> {
+    async fn practice<'ctx>(&self, ctx: &'ctx Context<'_>) -> FieldResult<&'ctx Practice> {
         match ctx.data::<Configuration>() {
             Ok(configuration) => Ok(&configuration.practice),
             Err(e) => Err(e),
@@ -30,12 +27,14 @@ impl Query {
     ) -> FieldResult<LabInstance> {
         let categories = &ctx.data::<Configuration>()?.practice.lab_categories;
 
-        let labs = &categories.iter()
+        let labs = &categories
+            .iter()
             .find(|category| category.id == category_id)
             .ok_or(QueryError::NotFoundError("category".to_string()).extend())?
             .labs;
 
-        let lab = labs.iter()
+        let lab = labs
+            .iter()
             .find(|lab| lab.id == lab_id)
             .ok_or(QueryError::NotFoundError("lab".to_string()).extend())?;
 
@@ -43,12 +42,16 @@ impl Query {
             .map(|lang| lab.resources.iter().find(|resource| resource.lang == lang))
             .flatten()
             .ok_or(QueryError::NotFoundError("translation".to_string()).extend())?;
-        
-        let mut result: LabInstance = LabInstance{lang: resource.lang.clone(), name: resource.name.clone(), content: String::new()};
+
+        let mut result: LabInstance = LabInstance {
+            lang: resource.lang.clone(),
+            name: resource.name.clone(),
+            content: String::new(),
+        };
         File::open(&resource.resource)
-            .map_err(|_|QueryError::ServerError("internal error".to_string()).extend())?
+            .map_err(|_| QueryError::ServerError("internal error".to_string()).extend())?
             .read_to_string(&mut result.content)
-            .map_err(|_|QueryError::ServerError("internal error".to_string()).extend())?;
+            .map_err(|_| QueryError::ServerError("internal error".to_string()).extend())?;
 
         Ok(result)
     }
@@ -63,7 +66,9 @@ impl Configuration {
     pub fn from_file(path: PathBuf) -> Configuration {
         let mut config_file = File::open(path).expect("Error occurred opening file");
         let mut config_string = String::new();
-        config_file.read_to_string(&mut config_string).expect("Error Reading file");
+        config_file
+            .read_to_string(&mut config_string)
+            .expect("Error Reading file");
         ron::from_str(&config_string).expect("Error parsing file")
     }
 }
