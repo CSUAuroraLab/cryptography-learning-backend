@@ -61,19 +61,10 @@ pub struct Configuration {
 
 impl Configuration {
     pub fn from_file(path: PathBuf) -> Configuration {
-        let mut config_file = match File::open(path) {
-            Ok(f) => f,
-            Err(e) => panic!("Error occurred opening file: {}", e),
-        };
+        let mut config_file = File::open(path).expect("Error occurred opening file");
         let mut config_string = String::new();
-        match config_file.read_to_string(&mut config_string) {
-            Ok(s) => s,
-            Err(e) => panic!("Error Reading file: {}", e),
-        };
-        match toml::from_str(&config_string) {
-            Ok(config) => config,
-            Err(e) => panic!("Error parsing file: {}", e),
-        }
+        config_file.read_to_string(&mut config_string).expect("Error Reading file");
+        ron::from_str(&config_string).expect("Error parsing file")
     }
 }
 
