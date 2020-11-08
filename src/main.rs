@@ -2,7 +2,7 @@ extern crate thiserror;
 
 use async_graphql::http::{playground_source, GraphQLPlaygroundConfig};
 use async_graphql::{EmptyMutation, EmptySubscription, Schema};
-use async_graphql_warp::{Response};
+use async_graphql_warp::Response;
 use dotenv::dotenv;
 use log::{debug, error};
 use std::convert::Infallible;
@@ -30,7 +30,7 @@ async fn main() {
     pretty_env_logger::init();
 
     debug!("{:?}", opt);
-    let config = Configuration::from_file(opt.config);
+    let config = Configuration::from_file(opt.config).await;
     debug!("{:?}", config);
 
     print!("Playground: http://localhost:8000/playground");
@@ -42,11 +42,13 @@ async fn main() {
     let graphql_post = warp::path("query")
         .and(async_graphql_warp::graphql(schema))
         .and_then(
-        |(schema, request): (
-            Schema<Query, EmptyMutation, EmptySubscription>,
-            async_graphql::Request,
-        )| async move { Ok::<_, Infallible>(Response::from(schema.execute(request).await)) },
-    );
+            |(schema, request): (
+                Schema<Query, EmptyMutation, EmptySubscription>,
+                async_graphql::Request,
+            )| async move {
+                Ok::<_, Infallible>(Response::from(schema.execute(request).await))
+            },
+        );
 
     let graphql_playground = warp::path("playground").map(|| {
         HttpResponse::builder()

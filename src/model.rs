@@ -1,7 +1,9 @@
 use crate::errors::QueryError;
 use async_graphql::{Context, ErrorExtensions, FieldResult, Object, SimpleObject};
 use serde::{Deserialize, Serialize};
-use std::{fs::File, io::Read, path::PathBuf};
+use std::path::PathBuf;
+use tokio::fs::File;
+use tokio::io::AsyncReadExt;
 
 pub struct Query;
 
@@ -49,8 +51,10 @@ impl Query {
             content: String::new(),
         };
         File::open(&resource.resource)
+            .await
             .map_err(|_| QueryError::ServerError("internal error".to_string()).extend())?
             .read_to_string(&mut result.content)
+            .await
             .map_err(|_| QueryError::ServerError("internal error".to_string()).extend())?;
 
         Ok(result)
@@ -63,11 +67,12 @@ pub struct Configuration {
 }
 
 impl Configuration {
-    pub fn from_file(path: PathBuf) -> Configuration {
-        let mut config_file = File::open(path).expect("Error occurred opening file");
+    pub async fn from_file(path: PathBuf) -> Configuration {
+        let mut config_file = File::open(path).await.expect("Error occurred opening file");
         let mut config_string = String::new();
         config_file
             .read_to_string(&mut config_string)
+            .await
             .expect("Error Reading file");
         ron::from_str(&config_string).expect("Error parsing file")
     }
