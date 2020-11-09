@@ -4,8 +4,10 @@ use serde::{Deserialize, Serialize};
 use std::path::PathBuf;
 use tokio::fs::File;
 use tokio::io::AsyncReadExt;
+use dashmap::DashMap;
 
 pub struct Query;
+pub type Storage = DashMap::<String, String>;
 
 #[Object]
 impl Query {
@@ -50,12 +52,21 @@ impl Query {
             name: resource.name.clone(),
             content: String::new(),
         };
-        File::open(&resource.resource)
-            .await
-            .map_err(|_| QueryError::ServerError("internal error".to_string()).extend())?
-            .read_to_string(&mut result.content)
-            .await
-            .map_err(|_| QueryError::ServerError("internal error".to_string()).extend())?;
+
+        let storage = ctx.data::<Storage>()?;
+        // not writing code in the way above is because aysnc clousure is not stable
+        match storage.get(&resource.resource) {
+            Some(content) => result.content = content.clone(),
+            None => {
+                File::open(&resource.resource)
+                    .await
+                    .map_err(|_| QueryError::ServerError("internal error".to_string()).extend())?
+                    .read_to_string(&mut result.content)
+                    .await
+                    .map_err(|_| QueryError::ServerError("internal error".to_string()).extend())?;
+                storage.insert(resource.resource.clone(), result.content.clone());
+            }
+        };
 
         Ok(result)
     }

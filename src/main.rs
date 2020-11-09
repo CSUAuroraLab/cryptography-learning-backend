@@ -13,7 +13,7 @@ mod errors;
 mod model;
 mod opts;
 
-use crate::model::{Configuration, Query};
+use crate::model::{Configuration, Query, Storage};
 
 #[tokio::main]
 async fn main() {
@@ -37,6 +37,7 @@ async fn main() {
 
     let schema = Schema::build(Query, EmptyMutation, EmptySubscription)
         .data(config.clone())
+        .data(Storage::new())
         .finish();
 
     let graphql_post = warp::path("query")
