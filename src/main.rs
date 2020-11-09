@@ -4,7 +4,7 @@ use async_graphql::http::{playground_source, GraphQLPlaygroundConfig};
 use async_graphql::{EmptyMutation, EmptySubscription, Schema};
 use async_graphql_warp::Response;
 use dotenv::dotenv;
-use log::{debug, error};
+use log::debug;
 use std::convert::Infallible;
 use structopt::StructOpt;
 use warp::{http::Response as HttpResponse, Filter};

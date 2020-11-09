@@ -8,9 +8,6 @@ pub enum QueryError {
 
     #[error("ServerError")]
     ServerError(String),
-
-    #[error("No Extensions")]
-    ErrorWithoutExtensions,
 }
 
 impl ErrorExtensions for QueryError {
@@ -18,8 +15,7 @@ impl ErrorExtensions for QueryError {
     fn extend(&self) -> FieldError {
         self.extend_with(|err, e| match err {
             QueryError::NotFoundError(resource) => e.set("code", format!("{} not found", resource)),
-            QueryError::ServerError(reason) => e.set("reason", reason.to_string()),
-            QueryError::ErrorWithoutExtensions => {}
+            QueryError::ServerError(reason) => e.set("reason", reason.to_string())
         })
     }
 }
