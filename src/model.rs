@@ -50,7 +50,7 @@ impl Query {
         let mut result: LabInstance = LabInstance {
             lang: resource.lang.clone(),
             name: resource.name.clone(),
-            endpoint: lab.endpoint.clone(),
+            endpoints: lab.endpoints.clone(),
             content: String::new(),
         };
 
@@ -99,7 +99,7 @@ struct Endpoint {
 #[derive(Deserialize, Serialize, SimpleObject, Debug, Clone)]
 struct Lab {
     id: String,
-    endpoint: Vec<Endpoint>,
+    endpoints: Vec<Endpoint>,
     resources: Vec<ResourceWithTranslation>,
 }
 
@@ -108,7 +108,7 @@ struct LabInstance {
     lang: String,
     name: String,
     content: String,
-    endpoint: Vec<Endpoint>,
+    endpoints: Vec<Endpoint>,
 }
 
 #[derive(Deserialize, Serialize, SimpleObject, Debug, Clone)]
