@@ -45,7 +45,8 @@ impl Query {
         let resource = language
             .map(|lang| lab.resources.iter().find(|resource| resource.lang == lang))
             .flatten()
-            .ok_or(QueryError::NotFoundError("translation".to_string()).extend())?;
+            .or(lab.resources.first())
+            .ok_or(QueryError::NotFoundError("resource".to_string()).extend())?;
 
         let mut result: LabInstance = LabInstance {
             lang: resource.lang.clone(),
