@@ -12,6 +12,7 @@
 /target
 
 .env
-config.ron
+*.ron
+!example.ron
 test/*
 .vscode
