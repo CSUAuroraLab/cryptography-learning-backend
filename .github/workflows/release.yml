@@ -16,14 +16,14 @@ jobs:
         os: [ubuntu-latest, windows-latest, macos-latest]
         include:
           - os: ubuntu-latest
-            artifact_name: slp-server-rust
-            release_name: slp-server-rust-linux-amd64
+            artifact_name: crypto-learn-backend
+            release_name: crypto-learn-backend-linux-amd64
           - os: windows-latest
-            artifact_name: slp-server-rust.exe
-            release_name: slp-server-rust-windows-amd64.exe
+            artifact_name: crypto-learn-backend.exe
+            release_name: crypto-learn-backend-windows-amd64.exe
           - os: macos-latest
-            artifact_name: slp-server-rust
-            release_name: slp-server-rust-macos-amd64
+            artifact_name: crypto-learn-backend
+            release_name: crypto-learn-backend-macos-amd64
 
     steps:
       - uses: actions/checkout@v2
@@ -71,6 +71,6 @@ jobs:
         uses: svenstaro/upload-release-action@v1-release
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: target/${{ matrix.target }}/release/slp-server-rust
-          asset_name: slp-server-rust-${{ matrix.target }}
+          file: target/${{ matrix.target }}/release/crypto-learn-backend
+          asset_name: crypto-learn-backend-${{ matrix.target }}
           tag: ${{ github.ref }}
