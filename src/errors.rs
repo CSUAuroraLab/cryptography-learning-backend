@@ -15,7 +15,7 @@ impl ErrorExtensions for QueryError {
     fn extend(&self) -> FieldError {
         self.extend_with(|err, e| match err {
             QueryError::NotFoundError(resource) => e.set("code", format!("{} not found", resource)),
-            QueryError::ServerError(reason) => e.set("reason", reason.to_string())
+            QueryError::ServerError(reason) => e.set("reason", reason.to_string()),
         })
     }
 }

@@ -1,13 +1,14 @@
 use crate::errors::QueryError;
 use async_graphql::{Context, ErrorExtensions, FieldResult, Object, SimpleObject};
+use dashmap::DashMap;
+use log::debug;
 use serde::{Deserialize, Serialize};
 use std::path::PathBuf;
 use tokio::fs::File;
 use tokio::io::AsyncReadExt;
-use dashmap::DashMap;
 
 pub struct Query;
-pub type Storage = DashMap::<String, String>;
+pub type Storage = DashMap<String, String>;
 
 #[Object]
 impl Query {
@@ -62,7 +63,10 @@ impl Query {
             None => {
                 File::open(&resource.resource)
                     .await
-                    .map_err(|_| QueryError::ServerError("internal error".to_string()).extend())?
+                    .map_err(|err| {
+                        debug!("{}", &format!("{:?}", err));
+                        QueryError::ServerError("open internal error".to_string()).extend()
+                    })?
                     .read_to_string(&mut result.content)
                     .await
                     .map_err(|_| QueryError::ServerError("internal error".to_string()).extend())?;
