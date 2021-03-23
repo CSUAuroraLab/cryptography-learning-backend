@@ -57,9 +57,9 @@ async fn main() {
             .body(playground_source(GraphQLPlaygroundConfig::new("/query")))
     });
 
-    let static_files = warp::path("static").and(warp::fs::dir(opt.static_file_path));
+    let static_files = warp::get().and(warp::fs::dir(opt.static_file_path));
 
-    let routes = graphql_playground.or(static_files).or(graphql_post);
+    let routes = graphql_playground.or(graphql_post).or(static_files);
 
     warp::serve(routes).run(([0, 0, 0, 0], 8000)).await;
 }
