@@ -5,7 +5,7 @@ use async_graphql::{EmptyMutation, EmptySubscription, Schema};
 use async_graphql_warp::Response;
 use dotenv::dotenv;
 use log::debug;
-use std::convert::Infallible;
+use std::{convert::Infallible, path::Path};
 use structopt::StructOpt;
 use warp::{http::Response as HttpResponse, Filter};
 
@@ -57,9 +57,11 @@ async fn main() {
             .body(playground_source(GraphQLPlaygroundConfig::new("/query")))
     });
 
-    let static_files = warp::get().and(warp::fs::dir(opt.static_file_path));
+    let static_files = warp::get().and(warp::fs::dir(opt.static_file_path.clone()));
+    let path = Path::new(&opt.static_file_path).join("index.html");
+    let fallback = warp::fs::file(path);
 
-    let routes = graphql_playground.or(graphql_post).or(static_files);
+    let routes = graphql_playground.or(graphql_post).or(static_files).or(fallback);
 
     warp::serve(routes).run(([0, 0, 0, 0], 8000)).await;
 }
