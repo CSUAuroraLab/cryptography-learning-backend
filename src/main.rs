@@ -5,6 +5,7 @@ use async_graphql::{EmptyMutation, EmptySubscription, Schema};
 use async_graphql_warp::Response;
 use dotenv::dotenv;
 use log::debug;
+use std::net::SocketAddr;
 use std::{convert::Infallible, path::Path};
 use structopt::StructOpt;
 use warp::{http::Response as HttpResponse, Filter};
@@ -33,7 +34,7 @@ async fn main() {
     let config = Configuration::from_file(opt.config).await;
     debug!("{:?}", config);
 
-    print!("Playground: http://localhost:8000/playground");
+    println!("Playground: http://{}/playground", opt.access_point);
 
     let schema = Schema::build(Query, EmptyMutation, EmptySubscription)
         .data(config.clone())
@@ -63,5 +64,6 @@ async fn main() {
 
     let routes = graphql_playground.or(graphql_post).or(static_files).or(fallback);
 
-    warp::serve(routes).run(([0, 0, 0, 0], 8000)).await;
+    let socket_addr: SocketAddr = opt.access_point.parse().expect("Unable to parse host address");
+    warp::serve(routes).run(socket_addr).await;
 }
