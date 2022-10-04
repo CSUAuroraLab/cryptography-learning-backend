@@ -13,7 +13,7 @@ pub type Storage = DashMap<String, String>;
 #[Object]
 impl Query {
     async fn hello(&self) -> String {
-        "hello world".to_string()
+        "hello cryptography".to_string()
     }
 
     async fn practice<'ctx>(&self, ctx: &'ctx Context<'_>) -> FieldResult<&'ctx Practice> {
@@ -52,7 +52,8 @@ impl Query {
         let mut result: LabInstance = LabInstance {
             lang: resource.lang.clone(),
             name: resource.name.clone(),
-            endpoints: lab.endpoints.clone(),
+            ws_endpoints: lab.ws_endpoints.clone(),
+            tcp_endpoints: lab.tcp_endpoints.clone(),
             content: String::new(),
         };
 
@@ -104,7 +105,8 @@ struct Endpoint {
 #[derive(Deserialize, Serialize, SimpleObject, Debug, Clone)]
 struct Lab {
     id: String,
-    endpoints: Vec<Endpoint>,
+    ws_endpoints: Vec<Endpoint>,
+    tcp_endpoints: Vec<Endpoint>,
     resources: Vec<ResourceWithTranslation>,
 }
 
@@ -113,7 +115,8 @@ struct LabInstance {
     lang: String,
     name: String,
     content: String,
-    endpoints: Vec<Endpoint>,
+    ws_endpoints: Vec<Endpoint>,
+    tcp_endpoints: Vec<Endpoint>,
 }
 
 #[derive(Deserialize, Serialize, SimpleObject, Debug, Clone)]

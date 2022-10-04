@@ -1,8 +1,8 @@
 [package]
 name = "cryptography-learning-backend"
-version = "0.1.0"
-authors = ["zickshen <zickshen@tencent.com>"]
-edition = "2018"
+version = "0.1.1"
+authors = ["CSUwangj <CSUwangj@protonmail.com>"]
+edition = "2021"
 
 [dependencies]
 async-graphql = "2.0"
