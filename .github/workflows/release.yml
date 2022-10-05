@@ -32,6 +32,11 @@ jobs:
           toolchain: stable
           target: ${{ matrix.target }}
           override: true
+        with:
+          toolchain: stable
+          target: ${{ matrix.target }}
+          override: true
+      - uses: Swatinem/rust-cache@v2
       - uses: actions-rs/cargo@v1
         with:
           use-cross: true
@@ -46,7 +51,7 @@ jobs:
           tag: ${{ github.ref }}
 
   cross-compile-publish:
-    name: Cross compile publish
+    name: Cross Compile Publish
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -73,7 +78,7 @@ jobs:
           tag: ${{ github.ref }}
 
   static-compile-publish:
-    name: Static build publish on Linux
+    name: Static Build Publish on Linux
     runs-on: ubuntu-latest
     env: 
       CARGO_TERM_COLOR: always
@@ -82,9 +87,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Static build
-        uses: gmiam/rust-musl-action@master
-        with:
-          args: cargo build --target $BUILD_TARGET --release
+        uses: zhxiaogg/cargo-static-build@master
       - uses: svenstaro/upload-release-action@v1-release
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
