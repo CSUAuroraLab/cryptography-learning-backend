@@ -23,7 +23,7 @@ Configuration(
                 resource: "practice/classical/affine/zh.md"
               )
             ],
-            endpoints: [
+            ws_endpoints: [
               (
                 host: "localhost",
                 port: 10020
@@ -31,6 +31,16 @@ Configuration(
               (
                 host: "192.168.16.128",
                 port: 10020
+              ),
+            ],
+            tcp_endpoints: [
+              (
+                host: "localhost",
+                port: 10000
+              ),
+              (
+                host: "192.168.16.128",
+                port: 10000
               ),
             ]
           )
