@@ -2,7 +2,7 @@ extern crate thiserror;
 
 use async_graphql::http::{playground_source, GraphQLPlaygroundConfig};
 use async_graphql::{EmptyMutation, EmptySubscription, Schema};
-use async_graphql_warp::Response;
+use async_graphql_warp::GraphQLResponse;
 use dotenv::dotenv;
 use log::debug;
 use std::net::SocketAddr;
@@ -48,7 +48,7 @@ async fn main() {
                 Schema<Query, EmptyMutation, EmptySubscription>,
                 async_graphql::Request,
             )| async move {
-                Ok::<_, Infallible>(Response::from(schema.execute(request).await))
+                Ok::<_, Infallible>(GraphQLResponse::from(schema.execute(request).await))
             },
         );
 

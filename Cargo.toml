@@ -6,9 +6,9 @@ edition = "2021"
 rust-version = "1.64"
 
 [dependencies]
-async-graphql = "2.0"
+async-graphql = "4.0"
 warp = "0.3.0"
-async-graphql-warp = "2.1.0"
+async-graphql-warp = "4.0"
 tokio = { version = "1.21", features = ["rt", "rt-multi-thread", "macros", "fs"] }
 http = "0.2"
 thiserror = "1.0"
